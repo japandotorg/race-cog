@@ -488,7 +488,7 @@ class Race(commands.Cog):
         embed.add_field(name=f"{second[0].display_name} <a:dl_second:888356685649961010>", value=second[1].emoji)
         if third:
             embed.add_field(name=f"{third[0].display_name} <a:dl_third:888356681908629507>", value=third[1].emoji)
-        embed.add_field(name="-" * 90, value="\u200b", inline=False)
+        embed.add_field(name="<a:RainbowLine:789502870357147709>" * 90, value="\u200b", inline=False)
         embed.add_field(name="Payouts", value=payout_msg)
         embed.add_field(name="Settings", value=race_config)
         embed.set_footer(text=f"Hosted by inthedark.org")
