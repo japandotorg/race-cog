@@ -99,7 +99,7 @@ class Race(commands.Cog):
         await ctx.send(
             f"<a:race:892001382591246346> A race has begun! Type `{ctx.prefix}race enter` to join! "
             f"to join the race <a:race:892001382591246346>\nThe race will begun in "
-            f"{wait} **SECONDS!**\n\n**{ctx.author.mention} ENTERED THE RACE SUCCESSFULLY** <a:dl_yayya:855360862100783115> "
+            f"{wait} seconds!!\n\n**{ctx.author.mention} ENTERED THE RACE SUCCESSFULLY** <a:dl_yayya:855360862100783115> "
         )
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True
