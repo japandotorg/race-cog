@@ -1,0 +1,9 @@
+{
+    "author" : ["redjumpman"],
+    "install_msg" : "This is a race cog originally made by `redjumpman(jumper-plugins)` and modified by me `(inthedark.org)` to my needs",
+    "name" : "racecog",
+    "short" : "race cog plugin",
+    "requirements" : ["tabulate"],
+    "description" : "contains a race game",
+    "tags" : ["Games"]
+}
