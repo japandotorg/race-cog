@@ -103,7 +103,7 @@ class Race(commands.Cog):
         )
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True
-        await ctx.send("<a:raceprocess:892002710843428864> The race is now in progress. <a:raceprocess:892002710843428864>")
+        await ctx.send("<a:raceprocess:892002710843428864> **__THE RACE IS NOW IN PROGRESS** <a:raceprocess:892002710843428864>")
         await self.run_game(ctx)
 
         settings = await self.config.guild(ctx.guild).all()
@@ -478,10 +478,10 @@ class Race(commands.Cog):
         footer = await self._get_bet_winners(ctx, first[0])
         race_config = (
             f"Prize: {settings['Prize']} {currency}\n"
-            f"Prize Pooling: {'ON' if settings['Pooling'] else 'OFF'}\n"
-            f"Min. human players for payout: {settings['Payout_Min'] + 1}\n"
-            f"Betting Allowed: {'YES' if settings['Bet_Allowed'] else 'NO'}\n"
-            f"Bet Multiplier: {settings['Bet_Multiplier']}x"
+            # f"Prize Pooling: {'ON' if settings['Pooling'] else 'OFF'}\n"
+            # f"Min. human players for payout: {settings['Payout_Min'] + 1}\n"
+            # f"Betting Allowed: {'YES' if settings['Bet_Allowed'] else 'NO'}\n"
+            # f"Bet Multiplier: {settings['Bet_Multiplier']}x"
         )
         embed = discord.Embed(colour=color, title="Race Results")
         embed.add_field(name=f"{first[0].display_name} <a:dl_first:888356685981315092>", value=first[1].emoji)
