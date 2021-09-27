@@ -103,7 +103,7 @@ class Race(commands.Cog):
         )
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True
-        await ctx.send("<a:raceprocess:892002710843428864> **__THE RACE IS NOW IN PROGRESS** <a:raceprocess:892002710843428864>")
+        await ctx.send("<a:raceprocess:892002710843428864> **__THE RACE IS NOW IN PROGRESS__** <a:raceprocess:892002710843428864>")
         await self.run_game(ctx)
 
         settings = await self.config.guild(ctx.guild).all()
