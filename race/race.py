@@ -491,7 +491,7 @@ class Race(commands.Cog):
         embed.add_field(name="-" * 90, value="\u200b", inline=False)
         embed.add_field(name="Payouts", value=payout_msg)
         embed.add_field(name="Settings", value=race_config)
-        embed.set_footer(text=f"Bet winners: {footer[0:2000]}")
+        embed.set_footer(text=f"Hosted by inthedark.org")
         mentions = "" if first[0].bot else f"{first[0].mention}"
         mentions += "" if second[0].bot else f", {second[0].mention}" if not first[0].bot else f"{second[0].mention}"
         mentions += "" if third is None or third[0].bot else f", {third[0].mention}"
