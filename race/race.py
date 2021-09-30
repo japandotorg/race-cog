@@ -169,7 +169,7 @@ class Race(commands.Cog):
             return await ctx.send("A race must be started before you can enter.")
         elif ctx.author in self.players[ctx.guild.id]:
             return await ctx.send("You have already entered the race.")
-        elif len(self.players[ctx.guild.id]) >= 10:
+        elif len(self.players[ctx.guild.id]) >= 9:
             return await ctx.send("The maximum number of players has been reached.")
         else:
             self.players[ctx.guild.id].append(ctx.author)
