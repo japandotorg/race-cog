@@ -99,7 +99,7 @@ class Race(commands.Cog):
         await ctx.send(
             f"<a:race:892001382591246346> **__A RACE HAS BEGUN__** <a:race:892001382591246346>\nType `{ctx.prefix}race enter` "
             f"to join the race\nThe race will begun in "
-            f"{wait} seconds\n\n{ctx.author.mention} entered the race successfully <a:dl_yayya:855360862100783115> "
+            f"{wait} seconds\n\n{ctx.author.mention} entered the race successfully <a:vibe:800106461643800616> "
         )
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True
@@ -553,7 +553,7 @@ class Race(commands.Cog):
                     fields.append(f"<a:yellowflower:951125747324575784> **{animal.current}** <a:prideflag:892003790339858462>  [{jockey.display_name}]")
                     continue
                 animal.move()
-                fields.append(f"<a:dl_yellowflower:855421329654546443> **{animal.current}** <a:prideflag:892003790339858462>  [{jockey.display_name}]")
+                fields.append(f"<a:yellowflower:951125747324575784> **{animal.current}** <a:prideflag:892003790339858462>  [{jockey.display_name}]")
                 if animal.position == 0 and len(self.winners[ctx.guild.id]) < 3:
                     self.winners[ctx.guild.id].append((jockey, animal))
             t = "\u200b\n" + "\n".join(fields)
