@@ -484,10 +484,10 @@ class Race(commands.Cog):
             # f"Bet Multiplier: {settings['Bet_Multiplier']}x"
         )
         embed = discord.Embed(colour=color, title="Race Results")
-        embed.add_field(name=f"{first[0].display_name} <a:dl_first:888356685981315092>", value=first[1].emoji)
-        embed.add_field(name=f"{second[0].display_name} <a:dl_second:888356685649961010>", value=second[1].emoji)
+        embed.add_field(name=f"{first[0].display_name} <a:firstplace:951334014944432158>", value=first[1].emoji)
+        embed.add_field(name=f"{second[0].display_name} <a:secondplace:951333793967530044>", value=second[1].emoji)
         if third:
-            embed.add_field(name=f"{third[0].display_name} <a:dl_third:888356681908629507>", value=third[1].emoji)
+            embed.add_field(name=f"{third[0].display_name} <a:thirdplace:951333904688762930>", value=third[1].emoji)
         embed.add_field(name="-" * 90, value="\u200b", inline=False)
         embed.add_field(name="Payouts", value=payout_msg)
         embed.add_field(name="Settings", value=race_config)
@@ -541,7 +541,7 @@ class Race(commands.Cog):
     async def run_game(self, ctx):
         players = await self._game_setup(ctx)
         setup = "\u200b\n" + "\n".join(
-            f"<a:dl_yellowflower:855421329654546443> **{animal.current}** <a:prideflag:892003790339858462>[{jockey.display_name}]" for animal, jockey in players
+            f"<a:yellowflower:951125747324575784> **{animal.current}** <a:prideflag:892003790339858462>[{jockey.display_name}]" for animal, jockey in players
         )
         track = await ctx.send(setup)
         while not all(animal.position == 0 for animal, jockey in players):
@@ -550,7 +550,7 @@ class Race(commands.Cog):
             fields = []
             for animal, jockey in players:
                 if animal.position == 0:
-                    fields.append(f"<a:dl_yellowflower:855421329654546443> **{animal.current}** <a:prideflag:892003790339858462>  [{jockey.display_name}]")
+                    fields.append(f"<a:yellowflower:951125747324575784> **{animal.current}** <a:prideflag:892003790339858462>  [{jockey.display_name}]")
                     continue
                 animal.move()
                 fields.append(f"<a:dl_yellowflower:855421329654546443> **{animal.current}** <a:prideflag:892003790339858462>  [{jockey.display_name}]")
