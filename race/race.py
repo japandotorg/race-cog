@@ -533,9 +533,9 @@ class Race(commands.Cog):
             if len(players) == 1:
                 players.append((Animal(*random.choice(racers)), ctx.bot.user))
         else:
-            players = [(Animal(":turtle:", "slow"), user) for user in users]
+            players = [(Animal("<a:melon_zen_run_race:960993940335632465>", "slow"), user) for user in users]
             if len(players) == 1:
-                players.append((Animal(":turtle:", "slow"), ctx.bot.user))
+                players.append((Animal("<a:melon_zen_run_race:960993940335632465>", "slow"), ctx.bot.user))
         return players
 
     async def run_game(self, ctx):
