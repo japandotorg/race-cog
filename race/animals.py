@@ -75,26 +75,17 @@ class Animal:
             return 2 * 3
 
         elif self._type == "abberant":
-            if random.randint(1, 100) >= 90:
-                return 5 * 3
-            else:
-                return random.randint(0, 2) * 3
-
+            return 5 * 3 if random.randint(1, 100) >= 90 else random.randint(0, 2) * 3
         elif self._type == "predator":
-            if self.turn % 2 == 0:
-                return 0
-            else:
-                return random.randint(2, 5) * 3
-
+            return 0 if self.turn % 2 == 0 else random.randint(2, 5) * 3
         elif self._type == ":unicorn:":
             if self.turn % 3:
                 return random.choice([len("blue"), len("red"), len("green")]) * 3
             else:
                 return 0
+        elif self.turn == 1:
+            return 14 * 3
+        elif self.turn == 2:
+            return 0
         else:
-            if self.turn == 1:
-                return 14 * 3
-            elif self.turn == 2:
-                return 0
-            else:
-                return random.randint(0, 2) * 3
+            return random.randint(0, 2) * 3

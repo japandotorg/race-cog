@@ -204,12 +204,11 @@ class Race(commands.Cog):
         except asyncio.TimeoutError:
             return await ctx.send("No response. Race wipe cancelled.")
 
-        if choice.content.lower() == f"{ctx.prefix}yes":
-            await self.config.guild(ctx.guild).clear()
-            await self.config.clear_all_members(ctx.guild)
-            return await ctx.send("Race data has been wiped.")
-        else:
+        if choice.content.lower() != f"{ctx.prefix}yes":
             return await ctx.send("Race wipe cancelled.")
+        await self.config.guild(ctx.guild).clear()
+        await self.config.clear_all_members(ctx.guild)
+        return await ctx.send("Race data has been wiped.")
 
     @race.command()
     async def version(self, ctx):
@@ -335,10 +334,9 @@ class Race(commands.Cog):
             return await ctx.send("No prizes will be awarded to the winners.")
         if prize > 2 ** 63 - 1:
             return await ctx.send("Try a smaller number.")
-        else:
-            currency = await bank.get_currency_name(ctx.guild)
-            await self.config.guild(ctx.guild).Prize.set(prize)
-            await ctx.send(f"Prize set for {prize} {currency}.")
+        currency = await bank.get_currency_name(ctx.guild)
+        await self.config.guild(ctx.guild).Prize.set(prize)
+        await ctx.send(f"Prize set for {prize} {currency}.")
 
     @setrace.command(name="togglepool")
     async def _tooglepool(self, ctx):
@@ -491,9 +489,16 @@ class Race(commands.Cog):
         embed.add_field(name="-" * 90, value="\u200b", inline=False)
         embed.add_field(name="Payouts", value=payout_msg)
         embed.add_field(name="Settings", value=race_config)
-        embed.set_footer(text=f"Hosted by inthedark.org")
+        embed.set_footer(text="Hosted by inthedark.org")
         mentions = "" if first[0].bot else f"{first[0].mention}"
-        mentions += "" if second[0].bot else f", {second[0].mention}" if not first[0].bot else f"{second[0].mention}"
+        mentions += (
+            ""
+            if second[0].bot
+            else f"{second[0].mention}"
+            if first[0].bot
+            else f", {second[0].mention}"
+        )
+
         mentions += "" if third is None or third[0].bot else f", {third[0].mention}"
         return mentions, embed
 
@@ -544,7 +549,7 @@ class Race(commands.Cog):
             f"<:ml_yellowdot:954964713912033291> **{animal.current}** <a:prideflag:892003790339858462>[{jockey.display_name}]" for animal, jockey in players
         )
         track = await ctx.send(setup)
-        while not all(animal.position == 0 for animal, jockey in players):
+        while any(animal.position != 0 for animal, jockey in players):
 
             await asyncio.sleep(2.0)
             fields = []
