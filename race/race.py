@@ -108,7 +108,11 @@ class Race(commands.Cog):
         emb.set_footer(text=f"{ctx.author.name} entered the race successfully!", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=emb)
         await asyncio.sleep(wait)
-        self.started[ctx.guild.id] = True
+        if len(self.players[ctx.guild.id]) <= 2:
+            await ctx.send("At least need two or more players to start a race!")
+            self.started[ctx.guild.id] = False
+        else:
+            self.started[ctx.guild.id] = True       
         await ctx.send("<a:raceprocess:892002710843428864> **__THE RACE IS NOW IN PROGRESS__** <a:raceprocess:892002710843428864>")
         await self.run_game(ctx)
 
