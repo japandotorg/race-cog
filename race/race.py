@@ -4,7 +4,7 @@
 # Standard Library
 import asyncio
 import random
-from typing import Literal
+from typing import Literal, Optional
 
 # Red
 from redbot.core import Config, bank, commands, checks
@@ -74,12 +74,12 @@ class Race(commands.Cog):
 
     @commands.group()
     @commands.guild_only()
-    async def race(self, ctx):
+    async def race(self, ctx: commands.Context):
         """Race related commands."""
         pass
 
     @race.command()
-    async def start(self, ctx):
+    async def start(self, ctx: commands.Context):
         """Begins a new race.
 
         You cannot start a new race until the active on has ended.
@@ -91,11 +91,13 @@ class Race(commands.Cog):
         """
         if self.active[ctx.guild.id]:
             return await ctx.send(f"A race is already in progress!  Type `{ctx.prefix}race enter` to enter!")
+        
         self.active[ctx.guild.id] = True
         self.players[ctx.guild.id].append(ctx.author)
         wait = await self.config.guild(ctx.guild).Wait()
         current = await self.config.guild(ctx.guild).Games_Played()
         await self.config.guild(ctx.guild).Games_Played.set(current + 1)
+        
         emb: discord.Embed = discord.Embed(
             title="**A Race Has Begun!**",
             color=await ctx.embed_color(),
@@ -106,9 +108,11 @@ class Race(commands.Cog):
             )
         ).set_thumbnail(url="https://cdn.discordapp.com/emojis/892001382591246346.gif")
         emb.set_footer(text=f"{ctx.author.name} entered the race successfully!", icon_url=ctx.author.avatar_url)
+        
         await ctx.send(embed=emb)
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True 
+        
         if len(self.players[ctx.guild.id]) <= 2:
             return await ctx.send("At least two or more players are needed to start a race!")
         else:   
@@ -123,18 +127,21 @@ class Race(commands.Cog):
         await self._race_teardown(ctx, settings)
 
     @race.command()
-    async def stats(self, ctx, user: discord.Member = None):
+    async def stats(self, ctx: commands.Context, user: Optional[discord.Member] = None):
         """Display your race stats."""
-        if not user:
+        if user is None:
             user = ctx.author
+            
         color = await ctx.embed_colour()
         user_data = await self.config.member(user).all()
         player_total = sum(user_data["Wins"].values()) + user_data["Losses"]
         server_total = await self.config.guild(ctx.guild).Games_Played()
+        
         try:
             percent = round((player_total / server_total) * 100, 1)
         except ZeroDivisionError:
             percent = 0
+            
         embed = discord.Embed(color=color, description="Race Stats")
         embed.set_author(name=f"{user}", icon_url=user.avatar_url)
         embed.add_field(
@@ -153,7 +160,7 @@ class Race(commands.Cog):
         await ctx.send(embed=embed)
 
     @race.command()
-    async def bet(self, ctx, bet: int, user: discord.Member):
+    async def bet(self, ctx: commands.Context, bet: int, user: discord.Member):
         """Bet on a user in the race."""
         if await self.bet_conditions(ctx, bet, user):
             self.bets[ctx.guild.id][ctx.author.id] = {user.id: bet}
@@ -162,7 +169,7 @@ class Race(commands.Cog):
             await ctx.send(f"{ctx.author.mention} placed a {bet} {currency} bet on {user.display_name}.")
 
     @race.command()
-    async def enter(self, ctx):
+    async def enter(self, ctx: commands.Context):
         """Allows you to enter the race.
 
         This command will return silently if a race has already started.
@@ -186,7 +193,7 @@ class Race(commands.Cog):
 
     @race.command(hidden=True)
     @checks.admin_or_permissions(administrator=True)
-    async def clear(self, ctx):
+    async def clear(self, ctx: commands.Context):
         """ONLY USE THIS COMMAND FOR DEBUG PURPOSES
 
         You shouldn't use this command unless the race is stuck
@@ -196,7 +203,7 @@ class Race(commands.Cog):
 
     @race.command()
     @checks.admin_or_permissions(administrator=True)
-    async def wipe(self, ctx):
+    async def wipe(self, ctx: commands.Context):
         """This command will wipe ALL race data.
 
         You are given a confirmation dialog when using this command.
@@ -221,19 +228,19 @@ class Race(commands.Cog):
             return await ctx.send("Race wipe cancelled.")
 
     @race.command()
-    async def version(self, ctx):
+    async def version(self, ctx: commands.Context):
         """Displays the version of race."""
         await ctx.send(f"You are running race version {__version__}.")
 
     @commands.group()
     @commands.guild_only()
     @checks.admin_or_permissions(administrator=True)
-    async def setrace(self, ctx):
+    async def setrace(self, ctx: commands.Context):
         """Race settings commands."""
         pass
 
     @setrace.command()
-    async def wait(self, ctx, wait: int):
+    async def wait(self, ctx: commands.Context, wait: int):
         """Changes the wait time before a race starts.
 
         This only affects the period where race is still waiting
@@ -244,12 +251,12 @@ class Race(commands.Cog):
         await ctx.send(f"Wait time before a race begins is now {wait} seconds.")
 
     @setrace.group(name="bet")
-    async def _bet(self, ctx):
+    async def _bet(self, ctx: commands.Context):
         """Bet settings for race."""
         pass
 
     @_bet.command(name="min")
-    async def _min(self, ctx, amount: int):
+    async def _min(self, ctx: commands.Context, amount: int):
         """Sets the betting minimum."""
         if amount < 0:
             return await ctx.send("Come on now. Let's be reasonable.")
@@ -261,7 +268,7 @@ class Race(commands.Cog):
         await ctx.send(f"Minimum bet amount set to {amount}.")
 
     @_bet.command(name="max")
-    async def _max(self, ctx, amount: int):
+    async def _max(self, ctx: commands.Context, amount: int):
         """Sets the betting maximum."""
         if amount < 0:
             return await ctx.send("Come on now. Let's be reasonable.")
@@ -275,7 +282,7 @@ class Race(commands.Cog):
         await ctx.send(f"Maximum bet amount set to {amount}.")
 
     @_bet.command()
-    async def multiplier(self, ctx, multiplier: float):
+    async def multiplier(self, ctx: commands.Context, multiplier: float):
         """Sets the betting multiplier.
         
         If the bot's economy mode is set to global instead of server-based, this setting is not available.
@@ -294,14 +301,14 @@ class Race(commands.Cog):
         await ctx.send(f"Betting multiplier set to {multiplier}.")
 
     @_bet.command()
-    async def toggle(self, ctx):
+    async def toggle(self, ctx: commands.Context):
         """Toggles betting on and off."""
         current = await self.config.guild(ctx.guild).Bet_Allowed()
         await self.config.guild(ctx.guild).Bet_Allowed.set(not current)
         await ctx.send(f"Betting is now {'OFF' if current else 'ON'}.")
 
     @setrace.command()
-    async def mode(self, ctx, mode: str):
+    async def mode(self, ctx: commands.Context, mode: str):
         """Changes the race mode.
 
         Race can either be in normal mode or zoo mode.
@@ -320,7 +327,7 @@ class Race(commands.Cog):
         await ctx.send(f"Mode changed to {mode.lower()}")
 
     @setrace.command()
-    async def prize(self, ctx, prize: int):
+    async def prize(self, ctx: commands.Context, prize: int):
         """Sets the prize pool for winners.
 
         Set the prize to 0 if you do not wish any credits to be distributed.
@@ -350,7 +357,7 @@ class Race(commands.Cog):
             await ctx.send(f"Prize set for {prize} {currency}.")
 
     @setrace.command(name="togglepool")
-    async def _tooglepool(self, ctx):
+    async def _tooglepool(self, ctx: commands.Context):
         """Toggles on/off prize pooling.
 
         Makes it so that prizes are pooled between 1st, 2nd, and 3rd.
@@ -364,7 +371,7 @@ class Race(commands.Cog):
         await ctx.send(f"Prize pooling is now {'OFF' if pool else 'ON'}.")
 
     @setrace.command()
-    async def payoutmin(self, ctx, players: int):
+    async def payoutmin(self, ctx: commands.Context, players: int):
         """Sets the number of players needed to payout prizes and bets.
 
         This sets the required number of players needed to payout prizes.
@@ -397,20 +404,20 @@ class Race(commands.Cog):
                 current = await self.config.member(player).Losses()
                 await self.config.member(player).Losses.set(current + 1)
 
-    async def _race_teardown(self, ctx, settings):
+    async def _race_teardown(self, ctx: commands.Context, settings):
         await self.stats_update(ctx)
         await self.distribute_prizes(ctx, settings)
         await self.bet_payouts(ctx, settings)
         self.clear_local(ctx)
 
-    def clear_local(self, ctx):
+    def clear_local(self, ctx: commands.Context):
         self.players[ctx.guild.id].clear()
         self.winners[ctx.guild.id].clear()
         self.bets[ctx.guild.id].clear()
         self.active[ctx.guild.id] = False
         self.started[ctx.guild.id] = False
 
-    async def distribute_prizes(self, ctx, settings):
+    async def distribute_prizes(self, ctx: commands.Context, settings):
         if settings["Prize"] == 0 or (settings["Payout_Min"] > len(self.players[ctx.guild.id])):
             return
 
@@ -431,7 +438,7 @@ class Race(commands.Cog):
             except BalanceTooHigh as e:
                 await bank.set_balance(self.winners[ctx.guild.id][0][0], e.max_balance)
 
-    async def bet_payouts(self, ctx, settings):
+    async def bet_payouts(self, ctx: commands.Context, settings):
         if not self.bets[ctx.guild.id] or not settings["Bet_Allowed"]:
             return
         multiplier = settings["Bet_Multiplier"]
@@ -445,7 +452,7 @@ class Race(commands.Cog):
                     except BalanceTooHigh as e:
                         await bank.set_balance(user, e.max_balance)
 
-    async def bet_conditions(self, ctx, bet, user):
+    async def bet_conditions(self, ctx: commands.Context, bet, user):
         if not self.active[ctx.guild.id]:
             await ctx.send("There isn't a race right now.")
             return False
@@ -477,7 +484,7 @@ class Race(commands.Cog):
             await ctx.send(f"Bet must not be lower than {minimum} or higher than {maximum}.")
             return False
 
-    async def _build_end_screen(self, ctx, settings, currency, color):
+    async def _build_end_screen(self, ctx: commands.Context, settings, currency, color):
         if len(self.winners[ctx.guild.id]) == 3:
             first, second, third = self.winners[ctx.guild.id]
         else:
