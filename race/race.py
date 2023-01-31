@@ -96,11 +96,17 @@ class Race(commands.Cog):
         wait = await self.config.guild(ctx.guild).Wait()
         current = await self.config.guild(ctx.guild).Games_Played()
         await self.config.guild(ctx.guild).Games_Played.set(current + 1)
-        await ctx.send(
-            f"<a:race:892001382591246346> **__A RACE HAS BEGUN__** <a:race:892001382591246346>\nType `{ctx.prefix}race enter` "
-            f"to join the race\nThe race will begun in "
-            f"{wait} seconds\n\n{ctx.author.mention} entered the race successfully <a:vibe:800106461643800616> "
-        )
+        emb: discord.Embed = discord.Embed(
+            title="**A Race Has Begun!**",
+            color=await ctx.embed_color(),
+            description=(
+                "<a:mel_whitedot:930948764674449498> Type `{ctx.prefix}race enter` "
+                "to join the race.\n<a:mel_whitedot:930948764674449498> The race will start in "
+                "{wait} seconds."
+            )
+        ).set_thumbnail(url="https://cdn.discordapp.com/emojis/892001382591246346.gif")
+        emb.set_footer(text=f"{ctx.author.name} entered the race successfully!", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=emb)
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True
         await ctx.send("<a:raceprocess:892002710843428864> **__THE RACE IS NOW IN PROGRESS__** <a:raceprocess:892002710843428864>")
