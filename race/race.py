@@ -110,7 +110,7 @@ class Race(commands.Cog):
         await asyncio.sleep(wait)
         self.started[ctx.guild.id] = True 
         if len(self.players[ctx.guild.id]) <= 2:
-            return await ctx.send("At least need two or more players to start a race!")
+            return await ctx.send("At least two or more players are needed to start a race!")
         else:   
             await ctx.send("<a:raceprocess:892002710843428864> **__THE RACE IS NOW IN PROGRESS__** <a:raceprocess:892002710843428864>")
             await self.run_game(ctx)
