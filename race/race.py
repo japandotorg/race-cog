@@ -100,9 +100,9 @@ class Race(commands.Cog):
             title="**A Race Has Begun!**",
             color=await ctx.embed_color(),
             description=(
-                "<a:mel_whitedot:930948764674449498> Type `{ctx.prefix}race enter` "
+                f"<a:mel_whitedot:930948764674449498> Type `{ctx.prefix}race enter` "
                 "to join the race.\n<a:mel_whitedot:930948764674449498> The race will start in "
-                "{wait} seconds."
+                f"{wait} seconds."
             )
         ).set_thumbnail(url="https://cdn.discordapp.com/emojis/892001382591246346.gif")
         emb.set_footer(text=f"{ctx.author.name} entered the race successfully!", icon_url=ctx.author.avatar_url)
